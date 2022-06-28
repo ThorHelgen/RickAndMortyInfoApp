@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/charactersNavItem"
+        android:enabled="true"
+        android:icon="@drawable/character_icon"
+        android:title="@string/main_bottom_nav_characters_title" />
+
+    <item
+        android:id="@+id/locationsNavItem"
+        android:enabled="true"
+        android:icon="@drawable/location_icon"
+        android:title="@string/main_bottom_nav_locations_title" />
+
+    <item
+        android:id="@+id/episodesNavItem"
+        android:enabled="true"
+        android:icon="@drawable/episode_icon"
+        android:title="@string/main_bottom_nav_episodes_title" />
+</menu>

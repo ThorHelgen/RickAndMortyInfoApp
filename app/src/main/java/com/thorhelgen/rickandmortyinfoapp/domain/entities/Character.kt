@@ -1,5 +1,7 @@
 package com.thorhelgen.rickandmortyinfoapp.domain.entities
 
+import android.graphics.Bitmap
+
 data class Character(
     val id: Int,
     val name: String,
@@ -9,6 +11,6 @@ data class Character(
     val gender: String,
     val originId: Int,
     val locationId: Int,
-    val imageName: String,
+    val image: Bitmap,
     val created: String
 )

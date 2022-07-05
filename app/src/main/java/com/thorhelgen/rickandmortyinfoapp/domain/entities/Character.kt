@@ -11,6 +11,6 @@ data class Character(
     val gender: String,
     val originId: Int,
     val locationId: Int,
-    val image: Bitmap,
+    val image: Bitmap?,
     val created: String
 )

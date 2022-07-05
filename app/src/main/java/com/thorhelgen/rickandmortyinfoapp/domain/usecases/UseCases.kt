@@ -13,11 +13,12 @@ interface UseCases {
     suspend fun getEpisodesPage(pageNumber: Int): List<Episode>
     suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails?
 
-    suspend fun searchCharacter(name: String): List<Character>
-    suspend fun searchLocation(name: String): List<Location>
-    suspend fun searchEpisode(name: String): List<Episode>
+    suspend fun searchCharacter(pageNumber: Int, name: String): List<Character>
+    suspend fun searchLocation(pageNumber: Int, name: String): List<Location>
+    suspend fun searchEpisode(pageNumber: Int, name: String): List<Episode>
 
     suspend fun filterCharacters(
+        pageNumber: Int,
         name: String = "",
         status: String = "",
         species: String = "",
@@ -25,11 +26,13 @@ interface UseCases {
         gender: String = ""
     ): List<Character>
     suspend fun filterLocations(
+        pageNumber: Int,
         name: String = "",
         type: String = "",
         dimension: String = ""
     ): List<Location>
     suspend fun filterEpisodes(
+        pageNumber: Int,
         name: String = "",
         episode: String = ""
     ): List<Episode>

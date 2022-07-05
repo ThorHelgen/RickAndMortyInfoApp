@@ -79,19 +79,20 @@ class UseCasesImpl (
         return localEpisodeDetails
     }
 
-    override suspend fun searchCharacter(name: String): List<Character> {
-        return filterCharacters(name)
+    override suspend fun searchCharacter(pageNumber: Int, name: String): List<Character> {
+        return filterCharacters(pageNumber, name)
     }
 
-    override suspend fun searchLocation(name: String): List<Location> {
-        return filterLocations(name)
+    override suspend fun searchLocation(pageNumber: Int, name: String): List<Location> {
+        return filterLocations(pageNumber, name)
     }
 
-    override suspend fun searchEpisode(name: String): List<Episode> {
-        return filterEpisodes(name)
+    override suspend fun searchEpisode(pageNumber: Int, name: String): List<Episode> {
+        return filterEpisodes(pageNumber, name)
     }
 
     override suspend fun filterCharacters(
+        pageNumber: Int,
         name: String,
         status: String,
         species: String,
@@ -99,11 +100,11 @@ class UseCasesImpl (
         gender: String
     ): List<Character> {
         val localResult: List<Character> = localRepository.filterCharacters(
-            name, status, species, type, gender
+            pageNumber,  name, status, species, type, gender
         )
         if (localResult.isEmpty()) {
             val remoteResult: List<Character> = remoteRepository.filterCharacters(
-                name, status, species, type, gender
+                pageNumber, name, status, species, type, gender
             )
             if (remoteResult.isNotEmpty()) {
                 localRepository.cacheCharacters(remoteResult)
@@ -114,16 +115,17 @@ class UseCasesImpl (
     }
 
     override suspend fun filterLocations(
+        pageNumber: Int,
         name: String,
         type: String,
         dimension: String
     ): List<Location> {
         val localResult: List<Location> = localRepository.filterLocations(
-            name, type, dimension
+            pageNumber, name, type, dimension
         )
         if (localResult.isEmpty()) {
             val remoteResult: List<Location> = remoteRepository.filterLocations(
-                name, type, dimension
+                pageNumber, name, type, dimension
             )
             if (remoteResult.isNotEmpty()) {
                 localRepository.cacheLocations(remoteResult)
@@ -133,13 +135,17 @@ class UseCasesImpl (
         return localResult
     }
 
-    override suspend fun filterEpisodes(name: String, episode: String): List<Episode> {
+    override suspend fun filterEpisodes(
+        pageNumber: Int,
+        name: String,
+        episode: String
+    ): List<Episode> {
         val localResult: List<Episode> = localRepository.filterEpisodes(
-            name, episode
+            pageNumber, name, episode
         )
         if (localResult.isEmpty()) {
             val remoteResult: List<Episode> = remoteRepository.filterEpisodes(
-                name, episode
+                pageNumber, name, episode
             )
             if (remoteResult.isNotEmpty()) {
                 localRepository.cacheEpisodes(remoteResult)

@@ -12,14 +12,24 @@ interface RemoteRepository {
     suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails?
 
     suspend fun filterCharacters(
-         name: String,
-         status: String,
-         species: String,
-         type: String,
-         gender: String
+        pageNumber: Int,
+        name: String,
+        status: String,
+        species: String,
+        type: String,
+        gender: String
      ): List<Character>
 
-    suspend fun filterLocations(name: String, type: String, dimension: String): List<Location>
+    suspend fun filterLocations(
+        pageNumber:Int,
+        name: String,
+        type: String,
+        dimension: String
+    ): List<Location>
 
-    suspend fun filterEpisodes(name: String, episode: String): List<Episode>
+    suspend fun filterEpisodes(
+        pageNumber: Int,
+        name: String,
+        episode: String
+    ): List<Episode>
 }

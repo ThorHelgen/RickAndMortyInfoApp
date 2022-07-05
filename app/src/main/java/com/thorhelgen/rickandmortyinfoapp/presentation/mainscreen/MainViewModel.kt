@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.thorhelgen.rickandmortyinfoapp.R
-import com.thorhelgen.rickandmortyinfoapp.domain.usecases.UseCasesImpl
+import com.thorhelgen.rickandmortyinfoapp.domain.usecases.UseCases
 import com.thorhelgen.rickandmortyinfoapp.presentation.mainscreen.grid.GridItem
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val useCases: UseCasesImpl
+    private val useCases: UseCases
 ) : ViewModel() {
     private val _itemsList = MutableLiveData<List<GridItem>>()
     val itemsList: LiveData<List<GridItem>> = _itemsList

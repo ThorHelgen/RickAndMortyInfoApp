@@ -1,8 +1,11 @@
-package com.thorhelgen.rickandmortyinfoapp.domain.entities
+package com.thorhelgen.rickandmortyinfoapp.data.local.entities
 
-import android.graphics.Bitmap
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class Character(
+    @PrimaryKey
     val id: Int,
     val name: String,
     val status: String,
@@ -13,6 +16,5 @@ data class Character(
     val originName: String,
     val locationId: Int,
     val locationName: String,
-    val image: Bitmap?,
     val created: String
 )

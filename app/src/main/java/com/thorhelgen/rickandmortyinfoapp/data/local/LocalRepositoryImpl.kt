@@ -3,9 +3,6 @@ package com.thorhelgen.rickandmortyinfoapp.data.local
 import android.content.Context
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.thorhelgen.rickandmortyinfoapp.data.local.entities.CharacterEpisodeCrossRef
-import com.thorhelgen.rickandmortyinfoapp.data.local.entities.CharacterWithEpisodes
-import com.thorhelgen.rickandmortyinfoapp.data.local.entities.EpisodeWithCharacters
-import com.thorhelgen.rickandmortyinfoapp.data.local.entities.LocationWithCharacters
 import com.thorhelgen.rickandmortyinfoapp.data.local.mappers.*
 import com.thorhelgen.rickandmortyinfoapp.domain.entities.*
 import com.thorhelgen.rickandmortyinfoapp.domain.usecases.LocalRepository
@@ -29,18 +26,20 @@ class LocalRepositoryImpl constructor(
         }
     }
 
-    override suspend fun getCharacterDetails(characterId: Int): CharacterDetails {
+    override suspend fun getCharacterDetails(characterId: Int): CharacterDetails? {
         val characterMapper = DataToDomainCharacterMapper(context)
         val episodeMapper = DataToDomainEpisodeMapper()
-        val details: CharacterWithEpisodes = cacheDB
+        cacheDB
             .getCacheDAO()
-            .queryCharacterWithEpisodes(characterId)
-        return CharacterDetails(
-            characterMapper.map(details.character),
-            details.episodes.map {
-                episodeMapper.map(it)
+            .queryCharacterWithEpisodes(characterId)?.let { details ->
+                return CharacterDetails(
+                    characterMapper.map(details.character),
+                    details.episodes.map {
+                        episodeMapper.map(it)
+                    }
+                )
             }
-        )
+        return null
     }
 
     override suspend fun cacheCharacterDetails(characterDetails: CharacterDetails) {
@@ -72,18 +71,20 @@ class LocalRepositoryImpl constructor(
         }
     }
 
-    override suspend fun getLocationDetails(locationId: Int): LocationDetails {
+    override suspend fun getLocationDetails(locationId: Int): LocationDetails? {
         val locationMapper = DataToDomainLocationMapper()
         val characterMapper = DataToDomainCharacterMapper(context)
-        val details: LocationWithCharacters = cacheDB
+        cacheDB
             .getCacheDAO()
-            .queryLocationWithCharacters(locationId)
-        return LocationDetails(
-            locationMapper.map(details.location),
-            details.characters.map {
-                characterMapper.map(it)
+            .queryLocationWithCharacters(locationId)?.let { details ->
+                return LocationDetails(
+                    locationMapper.map(details.location),
+                    details.characters.map {
+                        characterMapper.map(it)
+                    }
+                )
             }
-        )
+        return null
     }
 
     override suspend fun cacheLocationDetails(locationDetails: LocationDetails) {
@@ -107,18 +108,20 @@ class LocalRepositoryImpl constructor(
         }
     }
 
-    override suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails {
+    override suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails? {
         val episodeMapper = DataToDomainEpisodeMapper()
         val characterMapper = DataToDomainCharacterMapper(context)
-        val details: EpisodeWithCharacters = cacheDB
+        cacheDB
             .getCacheDAO()
-            .queryEpisodeWithCharacters(episodeId)
-        return EpisodeDetails(
-            episodeMapper.map(details.episode),
-            details.characters.map {
-                characterMapper.map(it)
+            .queryEpisodeWithCharacters(episodeId)?.let { details ->
+                return EpisodeDetails(
+                    episodeMapper.map(details.episode),
+                    details.characters.map {
+                        characterMapper.map(it)
+                    }
+                )
             }
-        )
+        return null
     }
 
     override suspend fun cacheEpisodeDetails(episodeDetails: EpisodeDetails) {

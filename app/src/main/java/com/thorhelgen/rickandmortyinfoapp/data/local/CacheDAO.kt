@@ -22,19 +22,19 @@ interface CacheDAO {
     suspend fun queryCharactersPage(pageNumber: Int): List<Character>
     @Transaction
     @Query("SELECT * FROM Character WHERE id = :characterId")
-    suspend fun queryCharacterWithEpisodes(characterId: Int): CharacterWithEpisodes
+    suspend fun queryCharacterWithEpisodes(characterId: Int): CharacterWithEpisodes?
 
     @Query("SELECT * FROM Location ORDER BY id LIMIT 20 OFFSET :pageNumber*20")
     suspend fun queryLocationsPage(pageNumber: Int): List<Location>
     @Transaction
     @Query("SELECT * FROM Location WHERE id = :locationId")
-    suspend fun queryLocationWithCharacters(locationId: Int): LocationWithCharacters
+    suspend fun queryLocationWithCharacters(locationId: Int): LocationWithCharacters?
 
     @Query("SELECT * FROM Episode ORDER BY id LIMIT 20 OFFSET :pageNumber*20")
     suspend fun queryEpisodesPage(pageNumber: Int): List<Episode>
     @Transaction
     @Query("SELECT * FROM Episode WHERE id = :episodeId")
-    suspend fun queryEpisodeWithCharacters(episodeId: Int): EpisodeWithCharacters
+    suspend fun queryEpisodeWithCharacters(episodeId: Int): EpisodeWithCharacters?
 
     @RawQuery
     suspend fun filterCharacters(query: SupportSQLiteQuery): List<Character>

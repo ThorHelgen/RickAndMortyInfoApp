@@ -22,11 +22,10 @@ class UseCasesImpl (
     override suspend fun getCharacterDetails(characterId: Int): CharacterDetails? {
         val localCharacterDetails: CharacterDetails? = localRepository.getCharacterDetails(characterId)
         if (localCharacterDetails == null || localCharacterDetails.episodes.isEmpty()) {
-            val remoteCharacterDetails: CharacterDetails? = remoteRepository.getCharacterDetails(characterId)
-            if (remoteCharacterDetails != null) {
-                localRepository.cacheCharacterDetails(remoteCharacterDetails)
+            remoteRepository.getCharacterDetails(characterId)?.let {
+                localRepository.cacheCharacterDetails(it)
+                return it
             }
-            return remoteCharacterDetails
         }
         return localCharacterDetails
     }
@@ -46,11 +45,10 @@ class UseCasesImpl (
     override suspend fun getLocationDetails(locationId: Int): LocationDetails? {
         val localLocationDetails: LocationDetails? = localRepository.getLocationDetails(locationId)
         if (localLocationDetails == null || localLocationDetails.residents.isEmpty()) {
-            val remoteLocationDetails: LocationDetails? = remoteRepository.getLocationDetails(locationId)
-            if (remoteLocationDetails != null) {
-                localRepository.cacheLocationDetails(remoteLocationDetails)
+            remoteRepository.getLocationDetails(locationId)?.let {
+                localRepository.cacheLocationDetails(it)
+                return it
             }
-            return remoteLocationDetails
         }
         return localLocationDetails
     }
@@ -70,11 +68,10 @@ class UseCasesImpl (
     override suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails? {
         val localEpisodeDetails: EpisodeDetails? = localRepository.getEpisodeDetails(episodeId)
         if (localEpisodeDetails == null || localEpisodeDetails.characters.isEmpty()) {
-            val remoteEpisodeDetails: EpisodeDetails? = remoteRepository.getEpisodeDetails(episodeId)
-            if (remoteEpisodeDetails != null) {
-                localRepository.cacheEpisodeDetails(remoteEpisodeDetails)
+            remoteRepository.getEpisodeDetails(episodeId)?.let {
+                localRepository.cacheEpisodeDetails(it)
+                return it
             }
-            return remoteEpisodeDetails
         }
         return localEpisodeDetails
     }

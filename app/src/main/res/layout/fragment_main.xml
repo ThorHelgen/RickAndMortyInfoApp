@@ -36,6 +36,17 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/mainBottomNavWrapper"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gridWrapper"/>
+
+
         <androidx.cardview.widget.CardView
             android:id="@+id/mainBottomNavWrapper"
             android:layout_width="0dp"

@@ -18,6 +18,10 @@ class MainViewModel @Inject constructor(
 
     var selectedMenuItemId: Int = R.id.charactersNavItem
 
+    var isRefreshing: Boolean = false
+
+    var currentPage: Int = 0
+
     init {
         _itemsList.value = emptyList()
     }

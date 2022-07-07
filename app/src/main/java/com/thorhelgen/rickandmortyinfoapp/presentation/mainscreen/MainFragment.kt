@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.getSystemService
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.thorhelgen.rickandmortyinfoapp.R
 import com.thorhelgen.rickandmortyinfoapp.databinding.FragmentMainBinding
 import com.thorhelgen.rickandmortyinfoapp.presentation.App.Companion.appComponent
@@ -50,6 +51,8 @@ class MainFragment() : Fragment() {
 
                     activity?.title = "Characters"
 
+                    viewModel.currentPage = 0
+
                     binding.itemsGrid.adapter = GridAdapter { id ->
                         activity?.supportFragmentManager?.commit {
                             val detailsFragment = CharacterDetailsFragment().apply {
@@ -60,6 +63,24 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}CharacterDetails")
                         }
                     }
+                    binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            if (!binding.itemsGrid.canScrollVertically(1)) {
+                                binding.loadingProgress.visibility = View.VISIBLE
+                                viewModel.loadCharactersList(
+                                    ++viewModel.currentPage,
+                                    {
+                                        viewModel.isRefreshing = false
+                                    },
+                                    {
+                                        binding.loadingProgress.visibility = View.INVISIBLE
+                                    },
+                                    viewModel.isRefreshing
+                                )
+                            }
+                        }
+                    })
 
                     viewModel.clearList()
                     viewModel.loadCharactersList(
@@ -73,6 +94,7 @@ class MainFragment() : Fragment() {
                         }
                     )
 
+                    viewModel.isRefreshing = false
                     binding.gridWrapper.setOnRefreshListener {
                         if (!hasInternetAccess()) {
                             Toast.makeText(
@@ -99,6 +121,8 @@ class MainFragment() : Fragment() {
                             },
                             true
                         )
+
+                        viewModel.isRefreshing = true
                     }
 
                     true
@@ -107,6 +131,8 @@ class MainFragment() : Fragment() {
                 R.id.locationsNavItem -> {
 
                     activity?.title = "Locations"
+
+                    viewModel.currentPage = 0
 
                     binding.itemsGrid.adapter = GridAdapter { id ->
                         activity?.supportFragmentManager?.commit {
@@ -118,6 +144,24 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}LocationDetails")
                         }
                     }
+                    binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            if (!binding.itemsGrid.canScrollVertically(1)) {
+                                binding.loadingProgress.visibility = View.VISIBLE
+                                viewModel.loadLocationsList(
+                                    ++viewModel.currentPage,
+                                    {
+                                        viewModel.isRefreshing = false
+                                    },
+                                    {
+                                        binding.loadingProgress.visibility = View.INVISIBLE
+                                    },
+                                    viewModel.isRefreshing
+                                )
+                            }
+                        }
+                    })
 
                     viewModel.clearList()
                     viewModel.loadLocationsList(
@@ -131,6 +175,7 @@ class MainFragment() : Fragment() {
                         }
                     )
 
+                    viewModel.isRefreshing = false
                     binding.gridWrapper.setOnRefreshListener {
                         if (!hasInternetAccess()) {
                             Toast.makeText(
@@ -157,6 +202,8 @@ class MainFragment() : Fragment() {
                             },
                             true
                         )
+
+                        viewModel.isRefreshing = true
                     }
 
                     true
@@ -165,6 +212,8 @@ class MainFragment() : Fragment() {
                 R.id.episodesNavItem -> {
 
                     activity?.title = "Episodes"
+
+                    viewModel.currentPage = 0
 
                     binding.itemsGrid.adapter = GridAdapter { id ->
                         activity?.supportFragmentManager?.commit {
@@ -176,6 +225,24 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}EpisodeDetails")
                         }
                     }
+                    binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            if (!binding.itemsGrid.canScrollVertically(1)) {
+                                binding.loadingProgress.visibility = View.VISIBLE
+                                viewModel.loadEpisodesList(
+                                    ++viewModel.currentPage,
+                                    {
+                                        viewModel.isRefreshing = false
+                                    },
+                                    {
+                                        binding.loadingProgress.visibility = View.INVISIBLE
+                                    },
+                                    viewModel.isRefreshing
+                                )
+                            }
+                        }
+                    })
 
                     viewModel.clearList()
                     viewModel.loadEpisodesList(
@@ -189,6 +256,7 @@ class MainFragment() : Fragment() {
                         }
                     )
 
+                    viewModel.isRefreshing = false
                     binding.gridWrapper.setOnRefreshListener {
                         if (!hasInternetAccess()) {
                             Toast.makeText(
@@ -215,6 +283,8 @@ class MainFragment() : Fragment() {
                             },
                             true
                         )
+
+                        viewModel.isRefreshing = true
                     }
 
                     true

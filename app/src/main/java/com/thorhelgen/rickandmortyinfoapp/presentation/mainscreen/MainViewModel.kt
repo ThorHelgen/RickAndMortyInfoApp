@@ -24,66 +24,88 @@ class MainViewModel @Inject constructor(
 
     fun loadCharactersList(
         pageNumber: Int,
-        onLoadingFailed: (message: String) -> Unit = {  }
+        onLoadingFailed: (message: String) -> Unit = {  },
+        onLoadingSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            _itemsList.value = useCases.getCharactersPage(pageNumber).map {
-                GridItem(
-                    it.id,
-                    it.name,
-                    it.image,
-                    it.species,
-                    it.originName,
-                    it.locationName
-                )
-            }.apply {
-                if (isEmpty()) {
-                    onLoadingFailed("Characters cannot be loaded")
+            _itemsList.value = _itemsList.value?.plus(
+                useCases.getCharactersPage(pageNumber, forceRemote).map {
+                    GridItem(
+                        it.id,
+                        it.name,
+                        it.image,
+                        it.species,
+                        it.originName,
+                        it.locationName
+                    )
+                }.apply {
+                    if (isEmpty()) {
+                        onLoadingFailed("Characters cannot be loaded")
+                    } else {
+                        onLoadingSuccess("Success")
+                    }
                 }
-            }
+            )
         }
     }
 
     fun loadLocationsList(
         pageNumber: Int,
-        onLoadingFailed: (message: String) -> Unit = {  }
+        onLoadingFailed: (message: String) -> Unit = {  },
+        onLoadingSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            _itemsList.value = useCases.getLocationsPage(pageNumber).map {
-                GridItem(
-                    it.id,
-                    it.name,
-                    null,
-                    it.type,
-                    it.dimension
-                )
-            }.apply {
-                if (isEmpty()) {
-                    onLoadingFailed("Locations cannot be loaded")
+            _itemsList.value = _itemsList.value?.plus(
+                useCases.getLocationsPage(pageNumber, forceRemote).map {
+                    GridItem(
+                        it.id,
+                        it.name,
+                        null,
+                        it.type,
+                        it.dimension
+                    )
+                }.apply {
+                    if (isEmpty()) {
+                        onLoadingFailed("Locations cannot be loaded")
+                    } else {
+                        onLoadingSuccess("Success")
+                    }
                 }
-            }
+            )
         }
     }
 
     fun loadEpisodesList(
         pageNumber: Int,
-        onLoadingFailed: (message: String) -> Unit = {  }
+        onLoadingFailed: (message: String) -> Unit = {  },
+        onLoadingSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            _itemsList.value = useCases.getEpisodesPage(pageNumber).map {
-                GridItem(
-                    it.id,
-                    it.name,
-                    null,
-                    it.episode,
-                    it.air_date
-                )
-            }.apply {
-                if (isEmpty()) {
-                    onLoadingFailed("Episodes cannot be loaded")
+            _itemsList.value = _itemsList.value?.plus(
+                useCases.getEpisodesPage(pageNumber, forceRemote).map {
+                    GridItem(
+                        it.id,
+                        it.name,
+                        null,
+                        it.episode,
+                        it.air_date
+                    )
+                }.apply {
+                    if (isEmpty()) {
+                        onLoadingFailed("Episodes cannot be loaded")
+                    } else {
+                        onLoadingSuccess("Success")
+                    }
                 }
-            }
+            )
         }
 
+    }
+
+    fun clearList() {
+        _itemsList.value = emptyList()
     }
 }

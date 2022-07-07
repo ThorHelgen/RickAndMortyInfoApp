@@ -7,7 +7,16 @@ class UseCasesImpl (
     private val localRepository: LocalRepository,
     private val remoteRepository: RemoteRepository
 ) : UseCases {
-    override suspend fun getCharactersPage(pageNumber: Int): List<Character> {
+    override suspend fun getCharactersPage(pageNumber: Int, forceRemote: Boolean): List<Character> {
+
+        if (forceRemote) {
+            val remoteCharacters: List<Character> = remoteRepository.getCharactersPage(pageNumber)
+            if (remoteCharacters.isNotEmpty()) {
+                localRepository.cacheCharacters(remoteCharacters)
+            }
+            return remoteCharacters
+        }
+
         val localCharacters: List<Character> = localRepository.getCharactersPage(pageNumber)
         if (localCharacters.isEmpty()) {
             val remoteCharacters: List<Character> = remoteRepository.getCharactersPage(pageNumber)
@@ -19,7 +28,18 @@ class UseCasesImpl (
         return localCharacters
     }
 
-    override suspend fun getCharacterDetails(characterId: Int): CharacterDetails? {
+    override suspend fun getCharacterDetails(
+        characterId: Int,
+        forceRemote: Boolean
+    ): CharacterDetails? {
+
+        if (forceRemote) {
+            remoteRepository.getCharacterDetails(characterId)?.let {
+                localRepository.cacheCharacterDetails(it)
+                return it
+            }
+        }
+
         val localCharacterDetails: CharacterDetails? = localRepository.getCharacterDetails(characterId)
         if (localCharacterDetails == null || localCharacterDetails.episodes.isEmpty()) {
             remoteRepository.getCharacterDetails(characterId)?.let {
@@ -30,7 +50,16 @@ class UseCasesImpl (
         return localCharacterDetails
     }
 
-    override suspend fun getLocationsPage(pageNumber: Int): List<Location> {
+    override suspend fun getLocationsPage(pageNumber: Int, forceRemote: Boolean): List<Location> {
+
+        if (forceRemote) {
+            val remoteLocations: List<Location> = remoteRepository.getLocationsPage(pageNumber)
+            if (remoteLocations.isNotEmpty()) {
+                localRepository.cacheLocations(remoteLocations)
+            }
+            return remoteLocations
+        }
+
         val localLocations: List<Location> = localRepository.getLocationsPage(pageNumber)
         if (localLocations.isEmpty()) {
             val remoteLocations: List<Location> = remoteRepository.getLocationsPage(pageNumber)
@@ -42,7 +71,18 @@ class UseCasesImpl (
         return localLocations
     }
 
-    override suspend fun getLocationDetails(locationId: Int): LocationDetails? {
+    override suspend fun getLocationDetails(
+        locationId: Int,
+        forceRemote: Boolean
+    ): LocationDetails? {
+
+        if (forceRemote) {
+            remoteRepository.getLocationDetails(locationId)?.let {
+                localRepository.cacheLocationDetails(it)
+                return it
+            }
+        }
+
         val localLocationDetails: LocationDetails? = localRepository.getLocationDetails(locationId)
         if (localLocationDetails == null || localLocationDetails.residents.isEmpty()) {
             remoteRepository.getLocationDetails(locationId)?.let {
@@ -53,7 +93,16 @@ class UseCasesImpl (
         return localLocationDetails
     }
 
-    override suspend fun getEpisodesPage(pageNumber: Int): List<Episode> {
+    override suspend fun getEpisodesPage(pageNumber: Int, forceRemote: Boolean): List<Episode> {
+
+        if (forceRemote) {
+            val remoteEpisodes: List<Episode> = remoteRepository.getEpisodesPage(pageNumber)
+            if (remoteEpisodes.isNotEmpty()) {
+                localRepository.cacheEpisodes(remoteEpisodes)
+            }
+            return remoteEpisodes
+        }
+
         val localEpisodes: List<Episode> = localRepository.getEpisodesPage(pageNumber)
         if (localEpisodes.isEmpty()) {
             val remoteEpisodes: List<Episode> = remoteRepository.getEpisodesPage(pageNumber)
@@ -65,7 +114,15 @@ class UseCasesImpl (
         return localEpisodes
     }
 
-    override suspend fun getEpisodeDetails(episodeId: Int): EpisodeDetails? {
+    override suspend fun getEpisodeDetails(episodeId: Int, forceRemote: Boolean): EpisodeDetails? {
+
+        if (forceRemote) {
+            remoteRepository.getEpisodeDetails(episodeId)?.let {
+                localRepository.cacheEpisodeDetails(it)
+                return it
+            }
+        }
+
         val localEpisodeDetails: EpisodeDetails? = localRepository.getEpisodeDetails(episodeId)
         if (localEpisodeDetails == null || localEpisodeDetails.characters.isEmpty()) {
             remoteRepository.getEpisodeDetails(episodeId)?.let {

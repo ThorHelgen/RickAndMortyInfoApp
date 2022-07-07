@@ -1,6 +1,7 @@
 package com.thorhelgen.rickandmortyinfoapp.presentation.details.episodes
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -50,13 +51,43 @@ class EpisodeDetailsFragment : Fragment() {
 
 
         val episodeId = arguments?.getInt("id", 0)!!
-        viewModel.loadEpisodeDetails(episodeId) {
-            Toast.makeText(
-                context,
-                "Oops! We can't find this episode...",
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.supportFragmentManager?.popBackStack()
+        viewModel.loadEpisodeDetails(
+            episodeId,
+            {
+                Toast.makeText(
+                    context,
+                    "Oops! We can't find this episode...",
+                    Toast.LENGTH_SHORT
+                ).show()
+                activity?.supportFragmentManager?.popBackStack()
+            }
+        )
+
+        binding.charactersListWrapper.setOnRefreshListener {
+            if (!hasInternetAccess()) {
+                Toast.makeText(
+                    context,
+                    "We cannot load characters. Make sure the Internet connection is available",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.charactersListWrapper.isRefreshing = false
+                return@setOnRefreshListener
+            }
+
+            viewModel.loadEpisodeDetails(
+                episodeId,
+                {
+                    Toast.makeText(
+                        context,
+                        "Oops! We can't find this episode...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                {
+                    binding.charactersListWrapper.isRefreshing = false
+                },
+                true
+            )
         }
 
         return binding.root
@@ -71,4 +102,8 @@ class EpisodeDetailsFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         super.onPause()
     }
+
+    private fun hasInternetAccess(): Boolean =
+        (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+            .activeNetworkInfo?.isConnected ?: false
 }

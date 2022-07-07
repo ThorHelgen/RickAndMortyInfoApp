@@ -1,6 +1,7 @@
 package com.thorhelgen.rickandmortyinfoapp.presentation.details.characters
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -49,13 +50,43 @@ class CharacterDetailsFragment : Fragment() {
         }
 
         val characterId = arguments?.getInt("id", 0)!!
-        viewModel.loadCharacterDetails(characterId) {
-            Toast.makeText(
-                context,
-                "Oops! We can't find this character...",
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.supportFragmentManager?.popBackStack()
+        viewModel.loadCharacterDetails(
+            characterId,
+            {
+                Toast.makeText(
+                    context,
+                    "Oops! We can't find this character...",
+                    Toast.LENGTH_SHORT
+                ).show()
+                activity?.supportFragmentManager?.popBackStack()
+            }
+        )
+
+        binding.episodesListWrapper.setOnRefreshListener {
+            if (!hasInternetAccess()) {
+                Toast.makeText(
+                    context,
+                    "We cannot load episodes. Make sure the Internet connection is available",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.episodesListWrapper.isRefreshing = false
+                return@setOnRefreshListener
+            }
+
+            viewModel.loadCharacterDetails(
+                characterId,
+                {
+                    Toast.makeText(
+                        context,
+                        "Oops! We can't find this character...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                {
+                    binding.episodesListWrapper.isRefreshing = false
+                },
+                true
+            )
         }
 
         return binding.root
@@ -70,4 +101,8 @@ class CharacterDetailsFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         super.onPause()
     }
+
+    private fun hasInternetAccess(): Boolean =
+        (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+            .activeNetworkInfo?.isConnected ?: false
 }

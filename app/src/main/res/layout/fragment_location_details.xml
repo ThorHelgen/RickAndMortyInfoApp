@@ -113,16 +113,23 @@
                 android:textSize="30sp"
                 android:text="Residents"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/residentsGrid"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/residentsListWrapper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="10dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:listData="@{viewModel.itemsList}"
-                app:spanCount="2"
-                tools:listitem="@layout/grid_item" />
+                android:layout_height="match_parent" >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/residentsGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:listData="@{viewModel.itemsList}"
+                    app:spanCount="2"
+                    tools:listitem="@layout/grid_item" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

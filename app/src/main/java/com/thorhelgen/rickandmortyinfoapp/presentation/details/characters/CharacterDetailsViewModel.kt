@@ -25,10 +25,12 @@ class CharacterDetailsViewModel @Inject constructor(
 
     fun loadCharacterDetails(
         characterId: Int,
-        onLoadFailed: (message: String) -> Unit = {  }
+        onLoadFailed: (message: String) -> Unit = {  },
+        onLoadSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            useCases.getCharacterDetails(characterId)?.let { details ->
+            useCases.getCharacterDetails(characterId, forceRemote)?.let { details ->
                 _character.value = details.character
                 _itemsList.value = details.episodes.map {
                     ListItem(
@@ -38,6 +40,7 @@ class CharacterDetailsViewModel @Inject constructor(
                         it.air_date
                     )
                 }
+                onLoadSuccess("Success")
             }
                 ?: onLoadFailed("Character is not found")
         }

@@ -216,15 +216,22 @@
                 android:textSize="30sp"
                 android:text="Episodes"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/episodesList"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/episodesListWrapper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:listData="@{viewModel.itemsList}"
-                tools:listitem="@layout/list_item" />
+                android:layout_height="match_parent" >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/episodesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:listData="@{viewModel.itemsList}"
+                    tools:listitem="@layout/list_item" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

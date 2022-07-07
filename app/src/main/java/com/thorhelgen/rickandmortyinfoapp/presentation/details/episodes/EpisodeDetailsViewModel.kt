@@ -26,10 +26,12 @@ class EpisodeDetailsViewModel @Inject constructor(
 
     fun loadEpisodeDetails(
         episodeId: Int,
-        onLoadFailed: (message: String) -> Unit = {  }
+        onLoadFailed: (message: String) -> Unit = {  },
+        onLoadSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            useCases.getEpisodeDetails(episodeId)?.let { details ->
+            useCases.getEpisodeDetails(episodeId, forceRemote)?.let { details ->
                 _episode.value = details.episode
                 _itemsList.value = details.characters.map {
                     GridItem(
@@ -41,6 +43,7 @@ class EpisodeDetailsViewModel @Inject constructor(
                         it.locationName
                     )
                 }
+                onLoadSuccess("Success")
             }
                 ?: onLoadFailed("Episode is not found")
         }

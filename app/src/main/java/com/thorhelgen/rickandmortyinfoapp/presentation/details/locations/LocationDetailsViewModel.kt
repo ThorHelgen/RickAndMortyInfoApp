@@ -25,10 +25,12 @@ class LocationDetailsViewModel @Inject constructor(
 
     fun loadLocationDetails(
         locationId: Int,
-        onLoadFailed: (message: String) -> Unit = {  }
+        onLoadFailed: (message: String) -> Unit = {  },
+        onLoadSuccess: (message: String) -> Unit = {  },
+        forceRemote: Boolean = false
     ) {
         viewModelScope.launch {
-            useCases.getLocationDetails(locationId)?.let { details ->
+            useCases.getLocationDetails(locationId, forceRemote)?.let { details ->
                 _location.value = details.location
                 _itemsList.value = details.residents.map {
                     GridItem(
@@ -40,6 +42,7 @@ class LocationDetailsViewModel @Inject constructor(
                         it.locationName
                     )
                 }
+                onLoadSuccess("Success")
             }
                 ?: onLoadFailed("Location is not found")
         }

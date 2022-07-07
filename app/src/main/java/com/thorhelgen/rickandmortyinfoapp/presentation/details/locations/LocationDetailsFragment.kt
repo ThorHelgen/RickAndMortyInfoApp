@@ -1,6 +1,7 @@
 package com.thorhelgen.rickandmortyinfoapp.presentation.details.locations
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -50,13 +51,43 @@ class LocationDetailsFragment : Fragment() {
         activity?.actionBar?.title = "Location Details"
 
         val locationId = arguments?.getInt("id", 0)!!
-        viewModel.loadLocationDetails(locationId) {
-            Toast.makeText(
-                context,
-                "Oops! We can't find this location...",
-                Toast.LENGTH_SHORT
-            ).show()
-            activity?.supportFragmentManager?.popBackStack()
+        viewModel.loadLocationDetails(
+            locationId,
+            {
+                Toast.makeText(
+                    context,
+                    "Oops! We can't find this location...",
+                    Toast.LENGTH_SHORT
+                ).show()
+                activity?.supportFragmentManager?.popBackStack()
+            }
+        )
+
+        binding.residentsListWrapper.setOnRefreshListener {
+            if (!hasInternetAccess()) {
+                Toast.makeText(
+                    context,
+                    "We cannot load residents. Make sure the Internet connection is available",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.residentsListWrapper.isRefreshing = false
+                return@setOnRefreshListener
+            }
+
+            viewModel.loadLocationDetails(
+                locationId,
+                {
+                    Toast.makeText(
+                        context,
+                        "Oops! We can't find this location...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                {
+                    binding.residentsListWrapper.isRefreshing = false
+                },
+                true
+            )
         }
 
         return binding.root
@@ -71,4 +102,8 @@ class LocationDetailsFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         super.onPause()
     }
+
+    private fun hasInternetAccess(): Boolean =
+        (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+            .activeNetworkInfo?.isConnected ?: false
 }

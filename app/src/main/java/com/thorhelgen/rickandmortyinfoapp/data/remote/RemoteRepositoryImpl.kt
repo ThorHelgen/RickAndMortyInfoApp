@@ -12,7 +12,7 @@ class RemoteRepositoryImpl constructor(
     private val apiService: ApiService
 ) : RemoteRepository {
     override suspend fun getCharactersPage(pageNumber: Int): List<Character> {
-        val mapper = CharacterMapper(apiService)
+        val mapper = CharacterMapper()
         val characters = try {
             apiService.getCharactersPage(pageNumber)
         } catch (_: Exception) {
@@ -42,7 +42,7 @@ class RemoteRepositoryImpl constructor(
     }
 
     override suspend fun getCharacterDetails(characterId: Int): CharacterDetails? {
-        val characterMapper = CharacterMapper(apiService)
+        val characterMapper = CharacterMapper()
         val character = try {
             apiService.getCharacterById(characterId)
         } catch (_: Exception) {
@@ -51,7 +51,12 @@ class RemoteRepositoryImpl constructor(
         val episodes: MutableList<Episode> = mutableListOf()
         character.episode.map {
             val episodesMapper = EpisodeMapper()
-            Uri.parse(it).lastPathSegment?.toInt()?.let { id ->
+            Uri.parse(it).lastPathSegment?.let { seg ->
+                if (seg == "") {
+                    return@let "0"
+                }
+                seg
+            }?.toInt()?.let { id ->
                 episodes.add(
                     episodesMapper.map(
                         apiService.getEpisodeById(id)
@@ -74,8 +79,13 @@ class RemoteRepositoryImpl constructor(
         }
         val residents: MutableList<Character> = mutableListOf()
         location.residents.map {
-            val characterMapper = CharacterMapper(apiService)
-            Uri.parse(it).lastPathSegment?.toInt()?.let { id ->
+            val characterMapper = CharacterMapper()
+            Uri.parse(it).lastPathSegment?.let { seg ->
+                if (seg == "") {
+                    return@let "0"
+                }
+                seg
+            }?.toInt()?.let { id ->
                 residents.add(
                     characterMapper.map(
                         apiService.getCharacterById(id)
@@ -98,8 +108,13 @@ class RemoteRepositoryImpl constructor(
         }
         val characters: MutableList<Character> = mutableListOf()
         episode.characters.map {
-            val characterMapper = CharacterMapper(apiService)
-            Uri.parse(it).lastPathSegment?.toInt()?.let { id ->
+            val characterMapper = CharacterMapper()
+            Uri.parse(it).lastPathSegment?.let { seg ->
+                if (seg == "") {
+                    return@let "0"
+                }
+                seg
+            }?.toInt()?.let { id ->
                 characters.add(
                     characterMapper.map(
                         apiService.getCharacterById(id)
@@ -121,7 +136,7 @@ class RemoteRepositoryImpl constructor(
         type: String,
         gender: String
     ): List<Character> {
-        val mapper = CharacterMapper(apiService)
+        val mapper = CharacterMapper()
         val characters = try {
             apiService.getCharactersPage(
                 pageNumber,
@@ -132,8 +147,8 @@ class RemoteRepositoryImpl constructor(
                 gender
             )
         }
-         catch (_: Exception) {
-             return emptyList()
+        catch (_: Exception) {
+            return emptyList()
         }
         return characters.results.map { mapper.map(it) }
     }

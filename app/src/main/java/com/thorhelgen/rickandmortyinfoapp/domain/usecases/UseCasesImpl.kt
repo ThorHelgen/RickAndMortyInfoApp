@@ -19,7 +19,7 @@ class UseCasesImpl (
 
         val localCharacters: List<Character> = localRepository.getCharactersPage(pageNumber)
         if (localCharacters.isEmpty()) {
-            val remoteCharacters: List<Character> = remoteRepository.getCharactersPage(pageNumber)
+            val remoteCharacters: List<Character> = remoteRepository.getCharactersPage(pageNumber + 1)
             if (remoteCharacters.isNotEmpty()) {
                 localRepository.cacheCharacters(remoteCharacters)
             }
@@ -53,7 +53,7 @@ class UseCasesImpl (
     override suspend fun getLocationsPage(pageNumber: Int, forceRemote: Boolean): List<Location> {
 
         if (forceRemote) {
-            val remoteLocations: List<Location> = remoteRepository.getLocationsPage(pageNumber)
+            val remoteLocations: List<Location> = remoteRepository.getLocationsPage(pageNumber + 1)
             if (remoteLocations.isNotEmpty()) {
                 localRepository.cacheLocations(remoteLocations)
             }
@@ -96,7 +96,7 @@ class UseCasesImpl (
     override suspend fun getEpisodesPage(pageNumber: Int, forceRemote: Boolean): List<Episode> {
 
         if (forceRemote) {
-            val remoteEpisodes: List<Episode> = remoteRepository.getEpisodesPage(pageNumber)
+            val remoteEpisodes: List<Episode> = remoteRepository.getEpisodesPage(pageNumber + 1)
             if (remoteEpisodes.isNotEmpty()) {
                 localRepository.cacheEpisodes(remoteEpisodes)
             }

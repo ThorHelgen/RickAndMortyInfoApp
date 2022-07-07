@@ -63,6 +63,7 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}CharacterDetails")
                         }
                     }
+                    binding.itemsGrid.clearOnScrollListeners()
                     binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
                         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                             super.onScrolled(recyclerView, dx, dy)
@@ -144,6 +145,7 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}LocationDetails")
                         }
                     }
+                    binding.itemsGrid.clearOnScrollListeners()
                     binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
                         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                             super.onScrolled(recyclerView, dx, dy)
@@ -225,6 +227,7 @@ class MainFragment() : Fragment() {
                             addToBackStack("to${id}EpisodeDetails")
                         }
                     }
+                    binding.itemsGrid.clearOnScrollListeners()
                     binding.itemsGrid.addOnScrollListener(object : RecyclerView.OnScrollListener(){
                         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                             super.onScrolled(recyclerView, dx, dy)
